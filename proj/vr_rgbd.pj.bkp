@@ -1,0 +1,45 @@
+@=
+projectName="vr_rgbd";
+projectType="application_plugin";
+projectGUID="D45CE29A-D4CB-4755-A2FF-8990CC14AF45";
+addProjectDirs=[CGV_DIR."/libs", CGV_DIR."/3rd", CGV_DIR."/plugins", CGV_DIR."/test"];
+addProjectDeps=["cgv_utils","cgv_type","cgv_data","cgv_base", "cgv_signal", "cgv_reflect", "cgv_media", "cgv_os", "cgv_gui", 
+				"cgv_render", 
+                "cgv_viewer","cgv_gl", "cg_fltk", "cg_ext", 
+				"cmi_io", "crg_vr_view", "cg_vr", "vr_emulator", "openvr_driver", "crg_grid", 
+				"glew",
+                "rgbd_capture", "rgbd_kinect", "point_cloud"];
+addIncDirs=[
+    CGV_DIR."/3rd", CGV_DIR."/libs/rgbd_capture", CGV_BUILD_DIR."/vr_rgbd", 
+    "C:/ffmpeg/include","Z:/_libs/opencv348/build/include",
+    "Z:/_libs/openmesh_src/src",
+    "Z:/testbed_framework_factory/nng/include",
+    "Z:/zrdevpacks/zract_eoomiVirtualMesh/proj"
+];
+addLibDirs=[
+    "C:/ffmpeg/lib",
+    "Z:/_libs/opencv348/build/x64/vc15/lib",
+    "Z:/_libs/openmesh_src/build/Build/lib",
+    "Z:/testbed_framework_factory/nng/build/Release",
+    "Z:/zrdevpacks/zract_eoomiVirtualMesh/proj"
+];
+addDependencies=[   
+    "opencv_world348",    
+    "avcodec",
+    "avdevice",
+    "avfilter",
+    "avformat",
+    "avutil",
+    "postproc",
+    "swresample",
+    "swscale",
+    "OpenMeshCore",
+    "OpenMeshTools",
+    "opengl",
+    "nng"
+];
+addSharedDefines=["VR_RGBD_EXPORTS"];
+addCommandLineArguments=[
+		after("type(vr_rgbd):protocol_path='".INPUT_DIR."'", "vr_rgbd"),
+		'config:"'.INPUT_DIR.'/config.def"',
+		after("type(shader_config):shader_path='".CGV_DIR."/libs/cgv_gl/glsl;".INPUT_DIR."'", "cg_fltk")];
