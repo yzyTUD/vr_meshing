@@ -26,8 +26,8 @@
 
 #include <gl_point_cloud_drawable.h>
 
-//#include <openmesh/core/io/meshio.hh>
-//#include <openmesh/core/mesh/polymesh_arraykernelt.hh>
+#include <openmesh/core/io/meshio.hh>
+#include <openmesh/core/mesh/polymesh_arraykernelt.hh>
 
 #include "boxgui.h"
 #include "mesh_render.h"
@@ -303,26 +303,29 @@ public:
 		basic stuffs
 	*/
 	vr_rgbd();
-	void compute_intersections(const vec3& origin, const vec3& direction, bool moveboxes, bool boxgui);
-	void on_device_change(void* kit_handle, bool attach);
-	void write_btnposi_to_file();
-	void construct_movable_boxgui(std::vector<std::string> llist);
-	void timer_event(double t, double dt);
-	void zr_calibration_init();
-	void zr_calibration_do();
-	void calibration_realworld_init();
-	void calibration_realworld_do();
-	void create_gui();
-	bool self_reflect(cgv::reflect::reflection_handler& rh);
-	void on_set(void* member_ptr);
-	void stream_help(std::ostream& os);
-	vec3 compute_ray_plane_intersection_point(const vec3& origin, const vec3& direction);
-	bool handle(cgv::gui::event& e);
 	bool init(cgv::render::context& ctx);
 	void init_frame(cgv::render::context& ctx);
 	void clear(cgv::render::context& ctx);
 	void draw_pc(cgv::render::context& ctx, const std::vector<vertex>& pc);
 	void draw(cgv::render::context& ctx);
+	// dynamic stuffs 
+	bool handle(cgv::gui::event& e);
+	void on_device_change(void* kit_handle, bool attach);
+	void timer_event(double t, double dt);
+	// gui related stuffs 
+	bool self_reflect(cgv::reflect::reflection_handler& rh);
+	void on_set(void* member_ptr);
+	void create_gui();
+
+	void write_btnposi_to_file();
+	void construct_movable_boxgui(std::vector<std::string> llist);
+	void compute_intersections(const vec3& origin, const vec3& direction, bool moveboxes, bool boxgui);
+	void zr_calibration_init();
+	void zr_calibration_do();
+	void calibration_realworld_init();
+	void calibration_realworld_do();
+	void stream_help(std::ostream& os);
+	vec3 compute_ray_plane_intersection_point(const vec3& origin, const vec3& direction);
 	std::string get_type_name() const;
 	void build_scene(float w, float d, float h, float W, float tw, float td, float th, float tW);
 	/// construct boxes that represent a table of dimensions tw,td,th and leg width tW

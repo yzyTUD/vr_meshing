@@ -2,9 +2,7 @@
 projectName="vr_meshing";
 projectType="application_plugin";
 projectGUID="CD452C37-22C9-4B1A-818E-3D36AC253746";
-addIncDirs    =[CGV_DIR."/3rd", CGV_DIR."/libs/rgbd_capture", CGV_BUILD_DIR."/vr_rgbd", INPUT_DIR."/../proj_point_cloud_vr", INPUT_DIR."/../proj_pinocchio", INPUT_DIR."/../proj_point_cloud_vr"];
-//addLibDirs=[env::REALSENSE_DIR."/lib/x64"];
-//addMapDeps = [ ["realsense2_lib", ["realsense2","realsense2","realsense2","realsense2"] ] ];
+
 addProjectDirs=[CGV_DIR."/libs", CGV_DIR."/3rd", CGV_DIR."/plugins", CGV_DIR."/test", INPUT_DIR."/../proj_pinocchio", INPUT_DIR."/../proj_point_cloud_vr"];
 addProjectDeps=["cgv_utils","cgv_type","cgv_data","cgv_base", "cgv_signal", "cgv_reflect", "cgv_media", "cgv_os", "cgv_gui", 
 				"cgv_render", 
@@ -14,14 +12,21 @@ addProjectDeps=["cgv_utils","cgv_type","cgv_data","cgv_base", "cgv_signal", "cgv
                 "rgbd_capture", "rgbd_kinect", "pinocchio", "point_cloud_vr"
 				];
 
+addIncDirs=[CGV_DIR."/3rd", CGV_DIR."/libs/rgbd_capture", CGV_BUILD_DIR."/vr_rgbd", 
+	INPUT_DIR."/../proj_point_cloud_vr", INPUT_DIR."/../proj_pinocchio", INPUT_DIR."/../proj_point_cloud_vr",
+	"Z:/_libs/openmesh64/include"
+];
+addLibDirs=["Z:/_libs/openmesh64/lib"];
+addDependencies=["opengl", "OpenMeshCore", "OpenMeshTools"];
+
+//addLibDirs=[env::REALSENSE_DIR."/lib/x64"];
+//addMapDeps = [ ["realsense2_lib", ["realsense2","realsense2","realsense2","realsense2"] ] ];
+
 if(SYSTEM=="windows") {
 	addStaticDefines=["REGISTER_SHADER_FILES"];
 }
-
 useOpenMP = 1;
 cppLanguageStandard = "stdcpp14";
-
-addDependencies=["opengl"];
 addSharedDefines=["VR_RGBD_EXPORTS"];
 addCommandLineArguments=[
 		after("type(vr_rgbd):protocol_path='".INPUT_DIR."'", "vr_rgbd"),

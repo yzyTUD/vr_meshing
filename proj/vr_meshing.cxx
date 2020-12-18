@@ -1,9 +1,9 @@
-#include "vr_scanning.h"
+#include "vr_meshing.h"
 #include <point_cloud_interactable.h>
 
 vr_rgbd::vr_rgbd()
 {
-	set_name("vr_rgbd");
+	set_name("vr_meshing");
 	rgbd_controller_index = 0;
 	controller_orientation.identity();
 	controller_position = vec3(0, 1.5f, 0);
@@ -54,7 +54,7 @@ vr_rgbd::vr_rgbd()
 		if (cgv::utils::to_lower(fn) == "calibri") {
 			label_font_face = cgv::media::font::find_font(fn)->get_font_face(label_face_type);
 			//label_font_idx = i;
-			for (auto& btn:boxguibtns) {
+			for (auto& btn : boxguibtns) {
 				if (btn.use_label)
 					btn.labeltex->label_font_idx = i; // why i? pp
 			}
@@ -65,71 +65,61 @@ vr_rgbd::vr_rgbd()
 	label_face_type = cgv::media::font::FFA_BOLD;
 	label_font_face = cgv::media::font::find_font(font_names[0])->get_font_face(label_face_type);
 
-	//typedef OpenMesh::PolyMesh_ArrayKernelT<>  MyMesh;
-	//MyMesh mesh;
-	//// generate vertices
-	//MyMesh::VertexHandle vhandle[8];
-	//vhandle[0] = mesh.add_vertex(MyMesh::Point(-1, -1, 1));
-	//vhandle[1] = mesh.add_vertex(MyMesh::Point(1, -1, 1));
-	//vhandle[2] = mesh.add_vertex(MyMesh::Point(1, 1, 1));
-	//vhandle[3] = mesh.add_vertex(MyMesh::Point(-1, 1, 1));
-	//vhandle[4] = mesh.add_vertex(MyMesh::Point(-1, -1, -1));
-	//vhandle[5] = mesh.add_vertex(MyMesh::Point(1, -1, -1));
-	//vhandle[6] = mesh.add_vertex(MyMesh::Point(1, 1, -1));
-	//vhandle[7] = mesh.add_vertex(MyMesh::Point(-1, 1, -1));
-	//// generate (quadrilateral) faces
-	//std::vector<MyMesh::VertexHandle>  face_vhandles;
-	//face_vhandles.clear();
-	//face_vhandles.push_back(vhandle[0]);
-	//face_vhandles.push_back(vhandle[1]);
-	//face_vhandles.push_back(vhandle[2]);
-	//face_vhandles.push_back(vhandle[3]);
-	//mesh.add_face(face_vhandles);
+	// openmesh integreation test 
+	{
+		typedef OpenMesh::PolyMesh_ArrayKernelT<>  MyMesh;
+		MyMesh mesh;
+		// generate vertices
+		MyMesh::VertexHandle vhandle[8];
+		vhandle[0] = mesh.add_vertex(MyMesh::Point(-1, -1, 1));
+		vhandle[1] = mesh.add_vertex(MyMesh::Point(1, -1, 1));
+		vhandle[2] = mesh.add_vertex(MyMesh::Point(1, 1, 1));
+		vhandle[3] = mesh.add_vertex(MyMesh::Point(-1, 1, 1));
+		vhandle[4] = mesh.add_vertex(MyMesh::Point(-1, -1, -1));
+		vhandle[5] = mesh.add_vertex(MyMesh::Point(1, -1, -1));
+		vhandle[6] = mesh.add_vertex(MyMesh::Point(1, 1, -1));
+		vhandle[7] = mesh.add_vertex(MyMesh::Point(-1, 1, -1));
+		// generate (quadrilateral) faces
+		std::vector<MyMesh::VertexHandle>  face_vhandles;
+		face_vhandles.clear();
+		face_vhandles.push_back(vhandle[0]);
+		face_vhandles.push_back(vhandle[1]);
+		face_vhandles.push_back(vhandle[2]);
+		face_vhandles.push_back(vhandle[3]);
+		mesh.add_face(face_vhandles);
 
-	//face_vhandles.clear();
-	//face_vhandles.push_back(vhandle[7]);
-	//face_vhandles.push_back(vhandle[6]);
-	//face_vhandles.push_back(vhandle[5]);
-	//face_vhandles.push_back(vhandle[4]);
-	//mesh.add_face(face_vhandles);
-	//face_vhandles.clear();
-	//face_vhandles.push_back(vhandle[1]);
-	//face_vhandles.push_back(vhandle[0]);
-	//face_vhandles.push_back(vhandle[4]);
-	//face_vhandles.push_back(vhandle[5]);
-	//mesh.add_face(face_vhandles);
-	//face_vhandles.clear();
-	//face_vhandles.push_back(vhandle[2]);
-	//face_vhandles.push_back(vhandle[1]);
-	//face_vhandles.push_back(vhandle[5]);
-	//face_vhandles.push_back(vhandle[6]);
-	//mesh.add_face(face_vhandles);
-	//face_vhandles.clear();
-	//face_vhandles.push_back(vhandle[3]);
-	//face_vhandles.push_back(vhandle[2]);
-	//face_vhandles.push_back(vhandle[6]);
-	//face_vhandles.push_back(vhandle[7]);
-	//mesh.add_face(face_vhandles);
-	//face_vhandles.clear();
-	//face_vhandles.push_back(vhandle[0]);
-	//face_vhandles.push_back(vhandle[3]);
-	//face_vhandles.push_back(vhandle[7]);
-	//face_vhandles.push_back(vhandle[4]);
-	//mesh.add_face(face_vhandles);
+		face_vhandles.clear();
+		face_vhandles.push_back(vhandle[7]);
+		face_vhandles.push_back(vhandle[6]);
+		face_vhandles.push_back(vhandle[5]);
+		face_vhandles.push_back(vhandle[4]);
+		mesh.add_face(face_vhandles);
+		face_vhandles.clear();
+		face_vhandles.push_back(vhandle[1]);
+		face_vhandles.push_back(vhandle[0]);
+		face_vhandles.push_back(vhandle[4]);
+		face_vhandles.push_back(vhandle[5]);
+		mesh.add_face(face_vhandles);
+		face_vhandles.clear();
+		face_vhandles.push_back(vhandle[2]);
+		face_vhandles.push_back(vhandle[1]);
+		face_vhandles.push_back(vhandle[5]);
+		face_vhandles.push_back(vhandle[6]);
+		mesh.add_face(face_vhandles);
+		face_vhandles.clear();
+		face_vhandles.push_back(vhandle[3]);
+		face_vhandles.push_back(vhandle[2]);
+		face_vhandles.push_back(vhandle[6]);
+		face_vhandles.push_back(vhandle[7]);
+		mesh.add_face(face_vhandles);
+		face_vhandles.clear();
+		face_vhandles.push_back(vhandle[0]);
+		face_vhandles.push_back(vhandle[3]);
+		face_vhandles.push_back(vhandle[7]);
+		face_vhandles.push_back(vhandle[4]);
+		mesh.add_face(face_vhandles);
 
-	//OpenMesh::IO::write_mesh(mesh, "output.off");
-
-	if (construct_boxgui) {
-		/*std::vector<std::string> labelList;
-		labelList.push_back("save_\nscene");
-		labelList.push_back("test1");
-		labelList.push_back("test2");
-		labelList.push_back("test3");
-		labelList.push_back("test4");*/
-		/*for (int i = 0; i < 30; i++) {
-			labelList.push_back("new btn_" + std::to_string(i));
-		}*/
-		//construct_movable_boxgui(labelList);
+		OpenMesh::IO::write_mesh(mesh, "output.off");
 	}
 
 	// define grid information, initialize cell info 
@@ -884,43 +874,6 @@ void vr_rgbd::calibration_realworld_do() {
 	update_member(&in_calibration);
 }
 ///
-bool vr_rgbd::self_reflect(cgv::reflect::reflection_handler& rh)
-{
-	return
-		rh.reflect_member("rgbd_controller_index", rgbd_controller_index) &&
-		rh.reflect_member("zoom_in", zoom_in) &&
-		rh.reflect_member("zoom_out", zoom_out) &&
-		rh.reflect_member("save_pc", save_pointcloud) &&
-		rh.reflect_member("register_pc", registration_started) &&
-		rh.reflect_member("recording_fps", recording_fps) &&
-		rh.reflect_member("ray_length", ray_length) &&
-		rh.reflect_member("record_frame", record_frame) &&
-		rh.reflect_member("record_all_frames", record_all_frames) &&
-		rh.reflect_member("clear_all_frames", clear_all_frames) &&
-		rh.reflect_member("rgbd_started", rgbd_started) &&
-		rh.reflect_member("pointcloud_reading_path", pointcloud_reading_path) &&
-		rh.reflect_member("rgbd_protocol_path", rgbd_protocol_path);
-}
-///
-void vr_rgbd::on_set(void* member_ptr)
-{
-	if (member_ptr == &rgbd_started && rgbd_started != rgbd_inp.is_started()) {
-		if (rgbd_started)
-			start_rgbd();
-		else
-			stop_rgbd();
-	}
-	if (member_ptr == &rgbd_protocol_path) {
-		rgbd_inp.stop();
-		rgbd_inp.detach();
-		rgbd_inp.attach_path(rgbd_protocol_path);
-		if (rgbd_started)
-			start_rgbd();
-	}
-	update_member(member_ptr);
-	post_redraw();
-}
-///
 void vr_rgbd::stream_help(std::ostream& os)
 {
 	os << "vr_rgbd: no shortcuts defined" << std::endl;
@@ -939,779 +892,6 @@ cgv::math::fvec<float, 3> vr_rgbd::compute_ray_plane_intersection_point(const ve
 	}
 
 	return p_result;
-}
-///
-bool vr_rgbd::handle(cgv::gui::event& e)
-{
-	// check if vr event flag is not set and don't process events in this case
-	if ((e.get_flags() & cgv::gui::EF_VR) == 0)
-		return false;
-	// check event id
-	switch (e.get_kind()) {
-	case cgv::gui::EID_KEY:
-	{
-		cgv::gui::vr_key_event& vrke = static_cast<cgv::gui::vr_key_event&>(e);
-		int ci = vrke.get_controller_index();
-		if (ci == 0 && vrke.get_key() == vr::VR_DPAD_DOWN) {
-			switch (vrke.get_action()) {
-			case cgv::gui::KA_PRESS:
-				rgbd_2_controller_orientation_start_calib = controller_orientation; // V^0 = V
-				rgbd_2_controller_position_start_calib = controller_position;       // r^0 = r
-				in_calibration = true;
-				update_member(&in_calibration);
-				break;
-			case cgv::gui::KA_RELEASE:
-				rgbd_2_controller_orientation = transpose(rgbd_2_controller_orientation_start_calib) * controller_orientation * rgbd_2_controller_orientation;
-				rgbd_2_controller_position = transpose(rgbd_2_controller_orientation_start_calib) * ((controller_orientation * rgbd_2_controller_position + controller_position) - rgbd_2_controller_position_start_calib);
-				in_calibration = false;
-				update_member(&in_calibration);
-				break;
-			}
-		}
-		if (ci == 0 && vrke.get_key() == vr::VR_DPAD_LEFT)
-		{
-			switch (vrke.get_action()) {
-			case cgv::gui::KA_PRESS:
-				zoom_in = true;
-				update_member(&zoom_in);
-				break;
-			case cgv::gui::KA_RELEASE:
-				zoom_in = false;
-				update_member(&zoom_in);
-				break;
-			}
-		}
-		if (ci == 0 && vrke.get_key() == vr::VR_DPAD_RIGHT)
-		{
-			switch (vrke.get_action()) {
-			case cgv::gui::KA_PRESS:
-				zoom_out = true;
-				update_member(&zoom_out);
-				break;
-			case cgv::gui::KA_RELEASE:
-				zoom_out = false;
-				update_member(&zoom_out);
-				break;
-			}
-		}
-		if (ci == 1 && vrke.get_key() == vr::VR_DPAD_LEFT)
-		{
-			if (vrke.get_action() == cgv::gui::KA_PRESS) 
-				vr_view_ptr->set_tracking_rotation(vr_view_ptr->get_tracking_rotation() + 10);
-		}
-		if (ci == 1 && vrke.get_key() == vr::VR_DPAD_RIGHT)
-		{
-			if (vrke.get_action() == cgv::gui::KA_PRESS) 
-				vr_view_ptr->set_tracking_rotation(vr_view_ptr->get_tracking_rotation() - 10);
-		}
-		if (ci == 0 && vrke.get_key() == vr::VR_MENU)
-		{
-			switch (vrke.get_action()) {
-			case cgv::gui::KA_PRESS:
-				clear_all_frames = true;
-				update_member(&clear_all_frames);
-				break;
-			case cgv::gui::KA_RELEASE:
-				clear_all_frames = false;
-				update_member(&clear_all_frames);
-				break;
-			}
-		}
-		if (ci == 1 && vrke.get_key() == vr::VR_GRIP)
-		{
-			if (vrke.get_action() == cgv::gui::KA_PRESS) {
-				vec3 origin, direction;
-				vrke.get_state().controller[1].put_ray(&origin(0), &direction(0)); 
-				vec3 posi = compute_ray_plane_intersection_point(origin, direction);
-				vr_view_ptr->set_tracking_origin(vec3(posi.x(), 
-					vr_view_ptr->get_tracking_origin().y(), posi.z()));
-			}
-		}
-		if (ci == 0 && vrke.get_key() == vr::VR_GRIP)
-		{
-			if (vrke.get_action() == cgv::gui::KA_PRESS) {
-				if (which_boxgui_group_is_going_to_be_rendered >= 0)
-					which_boxgui_group_is_going_to_be_rendered = -1; //erase all gui stuffs 
-				else
-					which_boxgui_group_is_going_to_be_rendered = 0;
-			}
-		}
-		return true;
-	}
-	case cgv::gui::EID_THROTTLE:
-	{
-		cgv::gui::vr_throttle_event& vrte = static_cast<cgv::gui::vr_throttle_event&>(e);
-		if ((vrte.get_last_value() <= 0.5f) && (vrte.get_value() > 0.5f)) {
-			trigger_is_pressed = (vrte.get_value() > 0.5f);
-			update_member(&trigger_is_pressed);
-			std::cout << "trigger pressed! " << std::endl;
-
-			//if (constructive_shaping_mode) {
-			//	if (predef_obj_id == 0) { // a box, two points are used
-			//		int max_rec_posi = 2; // we store maximal two positions to indicate a box 
-			//		vec3 cur_posi = objpicklist_translations.at(0);
-			//		if (num_rec_posi%2 == 0) { // if is the first position 
-			//			// compute current mvp 
-			//			mat4 mvp, R;
-			//			/*objpicklist_rotations.at(0).put_homogeneous_matrix(R);
-			//			mvp = cgv::math::scale4<double>(0.01 * obj_scale_factor, 0.01 * obj_scale_factor, 0.01 * obj_scale_factor);
-			//			mvp = R * mvp;
-			//			mvp = cgv::math::translate4<double>(objpicklist_translations.at(0)) * mvp;*/
-
-			//			mvp.identity();
-
-			//			cur_obj = new scanning_primitive(predef_obj_id, mvp, true);
-			//			cur_obj->record_position(cur_posi);
-			//			num_rec_posi++;
-			//			scanning_primitive_list.push_back(cur_obj);
-			//		}
-			//		else if (num_rec_posi%2 == 1) {
-			//			cur_obj->record_position(cur_posi);
-			//			num_rec_posi++;
-			//		}
-			//	}
-			//}
-			//else {
-			//	// things will be recorded directly, exact_shaping_mode
-			//	// compute current mvp 
-			//	mat4 mvp, R;
-			//	objpicklist_rotations.at(0).put_homogeneous_matrix(R);
-			//	mvp = cgv::math::scale4<double>(0.01 * obj_scale_factor, 0.01 * obj_scale_factor, 0.01 * obj_scale_factor);
-			//	mvp = R * mvp;
-			//	mvp = cgv::math::translate4<double>(objpicklist_translations.at(0)) * mvp;
-
-			//	cur_obj = new scanning_primitive(predef_obj_id, mvp, false);
-			//	scanning_primitive_list.push_back(cur_obj);
-			//}
-		}
-		break;
-	}
-	case cgv::gui::EID_STICK:
-	{
-		cgv::gui::vr_stick_event& vrse = static_cast<cgv::gui::vr_stick_event&>(e);
-		switch (vrse.get_action()) {
-			case cgv::gui::SA_TOUCH:
-				if (state[vrse.get_controller_index()] == IS_OVER)
-					state[vrse.get_controller_index()] = IS_GRAB;
-				std::cout << "IS_touch" << std::endl;
-				if(vrse.get_controller_index() == 1)
-					btn_keydown_boxgui = true;
-				break;
-			case cgv::gui::SA_RELEASE:
-				if (state[vrse.get_controller_index()] == IS_GRAB)
-					state[vrse.get_controller_index()] = IS_OVER;
-				break;
-			case cgv::gui::SA_PRESS:
-				if ((vrse.get_controller_index() == 1) && (predef_obj_id < predef_obj_maxid) && (vrse.get_x() > 0.5)) {
-					predef_obj_id++;
-				}
-				else if ((vrse.get_controller_index() == 1) && (predef_obj_id > 0) && (vrse.get_x() < -0.5)) {
-					predef_obj_id--;
-				}
-				break;
-		}
-		return true;
-	}
-	case cgv::gui::EID_POSE:
-		cgv::gui::vr_pose_event& vrpe = static_cast<cgv::gui::vr_pose_event&>(e);
-		// check for controller pose events
-		int ci = vrpe.get_trackable_index();
-		if (ci == rgbd_controller_index) { // always update the controller state! as global vari.
-			controller_orientation = vrpe.get_orientation();
-			controller_position = vrpe.get_position();
-		}
-		// left hand event 
-		if (ci == 0) { 
-			// update positions 
-			cur_left_hand_posi = vrpe.get_position();
-			cur_left_hand_rot = vrpe.get_orientation();
-			cur_left_hand_rot_mat = vrpe.get_rotation_matrix();
-		}
-		if (ci != -1) { 
-			if (btn_keydown_boxgui) {
-				if (intersection_boxgui_indices.size() > 0) {
-					// call back functions 
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("save_\nscene")) {
-						std::cout << "saved!" << std::endl;
-						write_btnposi_to_file();
-					}
-
-					// main panel  
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("back")) {
-						which_boxgui_group_is_going_to_be_rendered = 0;
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("pc_tools")) {
-						which_boxgui_group_is_going_to_be_rendered = 1;
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("mesh_\ntools")) {
-						which_boxgui_group_is_going_to_be_rendered = 2;
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("semantic\ntools")) {
-						which_boxgui_group_is_going_to_be_rendered = 3;
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("interaction\n_tools")) {
-						which_boxgui_group_is_going_to_be_rendered = 4;
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("gui_tools")) {
-						which_boxgui_group_is_going_to_be_rendered = 5;
-					}
-
-					// sub-panel 1
-					/*
-						label_list.push_back("read_properties");
-						label_list.push_back("load_next_pc");
-						label_list.push_back("del_last_pc");
-						label_list.push_back("align_pc_\nwith_last\n_frame");
-					*/
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("read_properties")) {
-						read_properties();
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("load_next_pc")) {
-						read_next_pc();
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("load_all_pcs")) {
-						read_pc_queue();
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("del_last_pc")) {
-						del_last_pc();
-					}
-					if (boxguibtns.at(intersection_boxgui_indices.front())
-						.get_label_text()._Equal("align_pc_\nwith_last\n_frame")) {
-
-					}
-
-
-				}
-				btn_keydown_boxgui = false;
-			}
-			if (state[0] == IS_GRAB) {
-				std::cout << "IS_GRAB" << std::endl;
-
-				// clean again
-				intersection_points.clear();
-				intersection_box_indices.clear();
-				intersection_boxgui_indices.clear();
-				for (auto& b : boxguibtns) { // pf- must have &! to modify 
-					b.has_intersec = false;
-				}
-				// in grab mode apply relative transformation to grabbed boxes
-				// compute intersections for left hand: drag and move boxes 
-				vec3 origin, direction;
-				vrpe.get_state().controller[0].put_ray(&origin(0), &direction(0));
-				compute_intersections(origin, direction, true, true);
-				// get previous and current controller position
-				vec3 last_pos = vrpe.get_last_position();
-				vec3 pos = vrpe.get_position();
-				// get rotation from previous to current orientation
-				// this is the current orientation matrix times the
-				// inverse (or transpose) of last orientation matrix:
-				// vrpe.get_orientation()*transpose(vrpe.get_last_orientation())
-				mat3 rotation = vrpe.get_rotation_matrix();
-				// iterate intersection points of current controller
-				for (size_t i = 0; i < intersection_points.size(); ++i) {
-					// extract box index
-					unsigned bi = intersection_box_indices[i];
-					// update translation with position change and rotation
-					movable_box_translations[bi] =
-						rotation * (movable_box_translations[bi] - last_pos) + pos;
-					// update orientation with rotation, note that quaternions
-					// need to be multiplied in oposite order. In case of matrices
-					// one would write box_orientation_matrix *= rotation
-					movable_box_rotations[bi] = quat(rotation) * movable_box_rotations[bi];
-					// update intersection points
-					intersection_points[i] = rotation * (intersection_points[i] - last_pos) + pos;
-				}
-
-				if (intersection_boxgui_indices.size() > 0) {
-					//intersection_boxgui_controller_indices
-					unsigned bi = intersection_boxgui_indices.front();
-					// update translation with position change and rotation
-					float xval = boxguibtns.at(bi).trans.x();
-					boxguibtns.at(bi).trans =
-						rotation * (boxguibtns.at(bi).trans - last_pos) + pos;
-					boxguibtns.at(bi).trans.x() = xval;
-					// update orientation with rotation, note that quaternions
-					// need to be multiplied in oposite order. In case of matrices
-					// one would write box_orientation_matrix *= rotation
-
-					//boxguibtns.at(bi).rot = quat(rotation) * boxguibtns.at(bi).rot;
-				}
-				//state[0] = IS_OVER;
-			}
-			else {
-				state[0] = IS_OVER; // init. 
-			}
-		}
-		// always run this block when pose changes 
-		{
-			// updated with right hand controller, we do not use button local rot now
-			vec3 local_z_offset = vec3(0, 0, -1);
-			quat rot(cur_left_hand_rot);
-			rot.normalize();
-			mat3 rot_mat;
-			rot.put_matrix(rot_mat);
-			vec3 global_offset = rot_mat * local_z_offset;
-			cur_left_hand_dir = global_offset;
-
-			for (auto& btn : boxguibtns) {
-				vec3 local_offset = btn.local_trans;
-				quat rot(cur_left_hand_rot);
-				rot.normalize();
-				mat3 rot_mat;
-				rot.put_matrix(rot_mat);
-				vec3 global_offset = rot_mat * local_offset;
-				// addi direction vector should be rotated 
-				vec3 modi_posi = cur_left_hand_posi + global_offset;
-
-				btn.trans = modi_posi;
-				btn.rot = rot * btn.local_rot;
-			}
-
-			// for right hand and boxgui intersections 
-			// init. for pose event clean, todo 
-			intersection_points.clear();
-			intersection_box_indices.clear();
-			intersection_boxgui_indices.clear();
-			for (auto& b : boxguibtns) { // pf- must have &! to modify 
-				b.has_intersec = false;
-			}
-
-			vec3 origin, direction;
-			vrpe.get_state().controller[1].put_ray(&origin(0), &direction(0));
-			compute_intersections(origin, direction, false, true);
-			/*vrpe.get_state().controller[0].put_ray(&origin(0), &direction(0));
-			compute_intersections(origin, direction, true, false);*/
-
-			if (intersection_boxgui_indices.size() > 0) {
-				boxguibtns.at(intersection_boxgui_indices.front()).has_intersec = true;
-				//post_redraw();
-			}
-			post_redraw();
-		}
-		return true;
-	}
-	
-	return false;
-}
-///
-bool vr_rgbd::init(cgv::render::context& ctx)
-{
-	cgv::render::ref_point_renderer(ctx, 1);
-
-	if (!cgv::utils::has_option("NO_OPENVR"))
-		ctx.set_gamma(1.0f);
-	cgv::gui::connect_vr_server(true);
-
-	auto view_ptr = find_view_as_node();
-	if (view_ptr) {
-		view_ptr->set_eye_keep_view_angle(dvec3(0, 4, -4));
-		// if the view points to a vr_view_interactor
-		vr_view_ptr = dynamic_cast<vr_view_interactor*>(view_ptr);
-		if (vr_view_ptr) {
-			// configure vr event processing
-			vr_view_ptr->set_event_type_flags(
-				cgv::gui::VREventTypeFlags(
-					cgv::gui::VRE_KEY +
-					cgv::gui::VRE_ONE_AXIS +
-					cgv::gui::VRE_ONE_AXIS_GENERATES_KEY +
-					cgv::gui::VRE_TWO_AXES +
-					cgv::gui::VRE_TWO_AXES_GENERATES_DPAD +
-					cgv::gui::VRE_POSE
-				));
-			vr_view_ptr->enable_vr_event_debugging(false);
-			// configure vr rendering
-			vr_view_ptr->draw_action_zone(false);
-			vr_view_ptr->draw_vr_kits(true);
-			vr_view_ptr->enable_blit_vr_views(true);
-			vr_view_ptr->set_blit_vr_view_width(200);
-
-		} 
-	}
-	cgv::render::ref_box_renderer(ctx, 1);
-	cgv::render::ref_sphere_renderer(ctx, 1);
-
-	skyprog.build_program(ctx, "skycube.glpr"); 
-	img_tex.create_from_images(ctx, data_dir + "/skybox/cm_{xp,xn,yp,yn,zp,zn}.jpg");
-	pointcloud_reading_path = data_dir + "/12.11.2020_tianfangs_office/";
-
-	bool succ = cube_prog.build_program(ctx, "color_cube.glpr", true);
-
-	cgv::render::gl::ensure_glew_initialized();
-	mmesh = std::make_shared<SkinningMesh>();
-	mmesh->init_shaders(ctx);
-
-	construct_handheld_gui();
-
-	if(pc_drawable)
-		pc_drawable->init(ctx);
-
-	return true;
-}
-///
-void vr_rgbd::init_frame(cgv::render::context& ctx)
-{
-	if(construct_boxgui)
-	for (auto& btn : boxguibtns) {
-		if (btn.use_label) {
-			if (btn.labeltex->label_fbo.get_width() != btn.labeltex->label_resolution) {
-				btn.labeltex->label_tex.destruct(ctx);
-				btn.labeltex->label_fbo.destruct(ctx);
-			}
-			if (!btn.labeltex->label_fbo.is_created()) {
-				btn.labeltex->label_tex.create(ctx, cgv::render::TT_2D, btn.labeltex->label_resolution, btn.labeltex->label_resolution);
-				btn.labeltex->label_fbo.create(ctx, btn.labeltex->label_resolution, btn.labeltex->label_resolution);
-				btn.labeltex->label_tex.set_min_filter(cgv::render::TF_LINEAR_MIPMAP_LINEAR);
-				btn.labeltex->label_tex.set_mag_filter(cgv::render::TF_LINEAR);
-				btn.labeltex->label_fbo.attach(ctx, btn.labeltex->label_tex);
-				btn.labeltex->label_outofdate = true;
-			}
-			if (btn.labeltex->label_outofdate && btn.labeltex->label_fbo.is_complete(ctx)) {
-				glPushAttrib(GL_COLOR_BUFFER_BIT);
-				btn.labeltex->label_fbo.enable(ctx);
-				btn.labeltex->label_fbo.push_viewport(ctx);
-				ctx.push_pixel_coords();
-				glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT);
-
-				glColor4f(btn.labeltex->label_color[0], btn.labeltex->label_color[1], btn.labeltex->label_color[2], 1);
-				ctx.set_cursor(20, (int)ceil(btn.labeltex->label_size) + 20);
-				ctx.enable_font_face(label_font_face, btn.labeltex->label_size);
-				ctx.output_stream() << btn.labeltex->label_text << "\n";
-				ctx.output_stream().flush(); // make sure to flush the stream before change of font size or font face
-
-				ctx.enable_font_face(label_font_face, 0.7f * btn.labeltex->label_size);
-				for (size_t i = 0; i < intersection_points.size(); ++i) {
-					ctx.output_stream()
-						<< "box " << intersection_box_indices[i]
-						<< " at (" << intersection_points[i]
-						<< ") with controller " << intersection_controller_indices[i] << "\n";
-				}
-				ctx.output_stream().flush();
-
-				ctx.pop_pixel_coords();
-				btn.labeltex->label_fbo.pop_viewport(ctx);
-				btn.labeltex->label_fbo.disable(ctx);
-				glPopAttrib();
-				btn.labeltex->label_outofdate = false;
-
-				btn.labeltex->label_tex.generate_mipmaps(ctx);
-			}
-		}
-	}
-
-	if(pc_drawable)
-		pc_drawable->init_frame(ctx);
-}
-///
-void vr_rgbd::clear(cgv::render::context& ctx)
-{
-	cgv::render::ref_point_renderer(ctx, -1);
-	cgv::render::ref_box_renderer(ctx, -1);
-	cgv::render::ref_sphere_renderer(ctx, -1);
-}
-///
-void vr_rgbd::draw_pc(cgv::render::context& ctx, const std::vector<vertex>& pc)
-{
-	if (pc.empty())
-		return;
-	auto& pr = cgv::render::ref_point_renderer(ctx);
-	pr.set_position_array(ctx, &pc.front().point, pc.size(), sizeof(vertex));
-	pr.set_color_array(ctx, &pc.front().color, pc.size(), sizeof(vertex));
-	if (pr.validate_and_enable(ctx)) {
-		glDrawArrays(GL_POINTS, 0, (GLsizei)pc.size());
-		pr.disable(ctx);
-	}
-}
-///
-void vr_rgbd::draw(cgv::render::context& ctx)
-{
-	// render the skybox as bkg
-	// large enough to contain the whole scene
-	float max_scene_extent = 100;
-	glDepthMask(GL_FALSE);
-	glDisable(GL_CULL_FACE);
-	img_tex.enable(ctx, 1);
-	skyprog.enable(ctx);
-	skyprog.set_uniform(ctx, "img_tex", 1);
-	ctx.push_modelview_matrix();
-	ctx.mul_modelview_matrix(cgv::math::scale4<double>(
-		max_scene_extent, max_scene_extent, max_scene_extent));
-	ctx.tesselate_unit_cube();
-	ctx.pop_modelview_matrix();
-	skyprog.disable(ctx);
-	img_tex.disable(ctx);
-	glEnable(GL_CULL_FACE);
-	glDepthMask(GL_TRUE);
-
-	// render the mesh 
-	if (mmesh)
-		mmesh->draw(ctx);
-
-	// render the handheld object: the historical ones 
-		for (int i = 0; i < scanning_primitive_list.size(); i++) {
-			cube_prog.enable(ctx);
-			cube_prog.set_uniform(ctx, "mvp", scanning_primitive_list.at(i)->get_mvp());
-			switch (scanning_primitive_list.at(i)->get_predef_obj_id()) {
-				case 0:
-					if (constructive_shaping_mode && scanning_primitive_list.at(i)->get_recorded_posi_list().size()>0) {
-						if ((num_rec_posi%2 == 1) && (i == (scanning_primitive_list.size() - 1))) {
-							// render the first posi and the current one, dynamic 
-							ctx.tesselate_box(box3(
-								vec3(scanning_primitive_list.at(i)->get_recorded_posi_list().at(0)),
-								vec3(objpicklist_translations.at(0))),false,false);
-						}
-						else {
-							// render a fixed object 
-							ctx.tesselate_box(box3(
-								vec3(scanning_primitive_list.at(i)->get_recorded_posi_list().at(0)),
-								vec3(scanning_primitive_list.at(i)->get_recorded_posi_list().at(1))), false, false);
-						}
-					}else
-						ctx.tesselate_unit_cube(false, false);
-					break;
-				case 1:
-					if (constructive_shaping_mode) {
-
-					}
-					else
-						ctx.tesselate_unit_sphere(25, false, false);
-					break;
-				case 2:
-					if (constructive_shaping_mode) {
-
-					}
-					else
-						ctx.tesselate_unit_prism(false, false);
-					break;
-			}
-			cube_prog.disable(ctx);
-		}
-
-	// tesselate + set_uniform style, current muster one
-		/*if (objpicklist_rotations.size() > 0) {
-			cube_prog.enable(ctx);
-			mat4 mvp, R;
-			objpicklist_rotations.at(0).put_homogeneous_matrix(R);
-			mvp = cgv::math::scale4<double>(0.01 * obj_scale_factor, 0.01 * obj_scale_factor, 0.01 * obj_scale_factor);
-			mvp = R * mvp;
-			mvp = cgv::math::translate4<double>(objpicklist_translations.at(0)) * mvp;
-			cube_prog.set_uniform(ctx, "mvp", mvp);
-			switch (predef_obj_id) {
-				case 0:
-					ctx.tesselate_unit_cube(false, false); 
-					break;
-				case 1:
-					ctx.tesselate_unit_sphere(25, false, false);
-					break;
-				case 2:
-					ctx.tesselate_unit_prism(false, false);
-					break;
-			}
-			cube_prog.disable(ctx);
-		}*/
-
-	// render the pc
-	if(pc_drawable)
-		pc_drawable->draw(ctx);
-
-	if (show_points) {
-		auto& pr = cgv::render::ref_point_renderer(ctx);
-		pr.set_render_style(point_style);
-		pr.set_y_view_angle((float)vr_view_ptr->get_y_view_angle());
-		draw_pc(ctx, current_pc);
-
-		//
-		for (size_t i = 0; i < loaded_pcs.size(); ++i)
-			draw_pc(ctx, loaded_pcs[i]);
-
-		//
-		size_t begin = 0;
-		size_t end = recorded_pcs.size();
-		if (end > max_nr_shown_recorded_pcs)
-			begin = end - max_nr_shown_recorded_pcs;
-			
-		for (size_t i=begin; i<end; ++i)
-			draw_pc(ctx, recorded_pcs[i]);
-	}
-		
-	if (vr_view_ptr) {
-		std::vector<vec3> P;
-		std::vector<rgb> C;
-		const vr::vr_kit_state* state_ptr = vr_view_ptr->get_current_vr_state();
-		if (state_ptr) {
-			for (int ci = 0; ci < 4; ++ci) if (state_ptr->controller[ci].status == vr::VRS_TRACKED) {
-				vec3 ray_origin, ray_direction;
-				state_ptr->controller[ci].put_ray(&ray_origin(0), &ray_direction(0));
-				P.push_back(ray_origin);
-				P.push_back(ray_origin + ray_length * ray_direction);
-				rgb c(float(1 - ci), 0.5f*(int)state[ci], float(ci));
-				C.push_back(c);
-				C.push_back(c);
-			}
-		}
-		if (P.size() > 0) {
-			cgv::render::shader_program& prog = ctx.ref_default_shader_program();
-			int pi = prog.get_position_index();
-			int ci = prog.get_color_index();
-			cgv::render::attribute_array_binding::set_global_attribute_array(ctx, pi, P);
-			cgv::render::attribute_array_binding::enable_global_array(ctx, pi);
-			cgv::render::attribute_array_binding::set_global_attribute_array(ctx, ci, C);
-			cgv::render::attribute_array_binding::enable_global_array(ctx, ci);
-			glLineWidth(3);
-			prog.enable(ctx);
-			glDrawArrays(GL_LINES, 0, (GLsizei)P.size());
-			prog.disable(ctx);
-			cgv::render::attribute_array_binding::disable_global_array(ctx, pi);
-			cgv::render::attribute_array_binding::disable_global_array(ctx, ci);
-			glLineWidth(1);
-		}
-	}
-		
-	// draw static boxes
-		if (boxes.size()) {
-			cgv::render::box_renderer& renderer = cgv::render::ref_box_renderer(ctx);
-			renderer.set_render_style(style);
-			renderer.set_box_array(ctx, boxes);
-			renderer.set_color_array(ctx, box_colors);
-			if (renderer.validate_and_enable(ctx)) {
-				glDrawArrays(GL_POINTS, 0, (GLsizei)boxes.size());
-			}
-			renderer.disable(ctx);
-		}
-
-	// push btns in boxgui to dynamic box list, treat 
-	// boxguibtns the same as moveble boxes
-	// render tex. in an other block
-	if(construct_boxgui)
-		if (boxguibtns.size()) {
-			cgv::render::box_renderer& renderer = cgv::render::ref_box_renderer(ctx);
-			std::vector<box3> movable_btn;
-			std::vector<rgb> movable_btn_colors;
-			std::vector<vec3> movable_btn_translations;
-			std::vector<quat> movable_btn_rotations;
-			for (auto btn : boxguibtns) {
-				if (btn.group == which_boxgui_group_is_going_to_be_rendered) {
-					movable_btn.push_back(box3(-0.5f * btn.ext, 0.5f * btn.ext));
-					movable_btn_colors.push_back(btn.color);
-					cur_left_hand_dir.normalize();
-
-					if (btn.has_intersec && !btn.is_static)
-						movable_btn_translations.push_back(btn.trans + cur_left_hand_dir * 0.1);
-					else 
-						movable_btn_translations.push_back(btn.trans);
-					movable_btn_rotations.push_back(btn.rot);
-				}
-			}
-			renderer.set_render_style(movable_style);
-			renderer.set_box_array(ctx, movable_btn);
-			renderer.set_color_array(ctx, movable_btn_colors);
-			renderer.set_translation_array(ctx, movable_btn_translations);
-			renderer.set_rotation_array(ctx, movable_btn_rotations);
-			if (renderer.validate_and_enable(ctx)) {
-				glDrawArrays(GL_POINTS, 0, (GLsizei)movable_btn.size());
-			}
-			renderer.disable(ctx);
-		}
-
-	// draw dynamic boxes 
-		if (!movable_boxes.empty()) {
-			cgv::render::box_renderer& renderer = cgv::render::ref_box_renderer(ctx);
-			renderer.set_render_style(movable_style);
-			renderer.set_box_array(ctx, movable_boxes);
-			renderer.set_color_array(ctx, movable_box_colors);
-			renderer.set_translation_array(ctx, movable_box_translations);
-			renderer.set_rotation_array(ctx, movable_box_rotations);
-			if (renderer.validate_and_enable(ctx)) {
-				glDrawArrays(GL_POINTS, 0, (GLsizei)movable_boxes.size());
-			}
-			renderer.disable(ctx);
-		}
-
-	// yzy, render labels of boxgui 
-		for (auto btn : boxguibtns) {
-			if(btn.group == which_boxgui_group_is_going_to_be_rendered)
-				if (btn.use_label) {
-					// points for a label, y-z plane
-					vec3 p1( 0.5 * btn.ext.x(),  0.5 * btn.ext.y(), 0);
-					vec3 p2(-0.5 * btn.ext.x(),  0.5 * btn.ext.y(), 0);
-					vec3 p3( 0.5 * btn.ext.x(), -0.5 * btn.ext.y(), 0);
-					vec3 p4(-0.5 * btn.ext.x(), -0.5 * btn.ext.y(), 0);
-
-					vec3 addi_offset = vec3(0);
-
-					if (btn.has_intersec && !btn.is_static)
-						addi_offset = vec3(0, 0, -0.1f); // todo
-					
-					p1 = p1 + vec3(0, 0, 0.5 * btn.ext.z() + 0.01) + addi_offset;
-					p2 = p2 + vec3(0, 0, 0.5 * btn.ext.z() + 0.01) + addi_offset;
-					p3 = p3 + vec3(0, 0, 0.5 * btn.ext.z() + 0.01) + addi_offset;
-					p4 = p4 + vec3(0, 0, 0.5 * btn.ext.z() + 0.01) + addi_offset;
-
-					/*quat tmp(vec3(0, 1, 0), var1);
-					tmp.rotate(p1);
-					tmp.rotate(p2);
-					tmp.rotate(p3);
-					tmp.rotate(p4);*/
-
-					// rotate and translate according to the gui boxes
-					btn.rot.rotate(p1);
-					btn.rot.rotate(p2);
-					btn.rot.rotate(p3);
-					btn.rot.rotate(p4);
-
-					p1 = p1 + btn.trans;
-					p2 = p2 + btn.trans;
-					p3 = p3 + btn.trans;
-					p4 = p4 + btn.trans;
-
-					cgv::render::shader_program& prog = ctx.ref_default_shader_program(true);
-					int pi = prog.get_position_index();
-					int ti = prog.get_texcoord_index();
-					std::vector<vec3> P;
-					std::vector<vec2> T;
-
-					P.push_back(p1); T.push_back(vec2(1.0f, 1.0f));
-					P.push_back(p2); T.push_back(vec2(0.0f, 1.0f));
-					P.push_back(p3); T.push_back(vec2(1.0f, 0.0f));
-					P.push_back(p4); T.push_back(vec2(0.0f, 0.0f));
-
-					cgv::render::attribute_array_binding::set_global_attribute_array(ctx, pi, P);
-					cgv::render::attribute_array_binding::enable_global_array(ctx, pi);
-					cgv::render::attribute_array_binding::set_global_attribute_array(ctx, ti, T);
-					cgv::render::attribute_array_binding::enable_global_array(ctx, ti);
-					prog.enable(ctx);
-					btn.labeltex->label_tex.enable(ctx);
-					ctx.set_color(rgb(1, 1, 1));
-					glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei)P.size());
-					btn.labeltex->label_tex.disable(ctx);
-					prog.disable(ctx);
-					cgv::render::attribute_array_binding::disable_global_array(ctx, pi);
-					cgv::render::attribute_array_binding::disable_global_array(ctx, ti);
-				}
-		}
-
-	// draw intersection points
-		if (!intersection_points.empty()) {
-			auto& sr = cgv::render::ref_sphere_renderer(ctx);
-			sr.set_position_array(ctx, intersection_points);
-			sr.set_color_array(ctx, intersection_colors);
-			sr.set_render_style(srs);
-			if (sr.validate_and_enable(ctx)) {
-				glDrawArrays(GL_POINTS, 0, (GLsizei)intersection_points.size());
-				sr.disable(ctx);
-			}
-		}
 }
 ///
 void vr_rgbd::construct_handheld_gui() {
@@ -1898,6 +1078,7 @@ void vr_rgbd::construct_handheld_gui() {
 	//objpicklist_translations.push_back(modi_posi);
 	//objpicklist_rotations.push_back(rot);
 }
+///
 void vr_rgbd::shuffle_button_group()
 {
 	if (which_boxgui_group_is_going_to_be_rendered < 2)
@@ -1961,91 +1142,6 @@ void vr_rgbd::compute_intersections(const vec3& origin, const vec3& direction, b
 				}
 			}
 		}
-}
-/// register on device change events
-void vr_rgbd::on_device_change(void* kit_handle, bool attach)
-{
-	post_recreate_gui();
-}
-/// write posi. list to file 
-void vr_rgbd::write_btnposi_to_file() {
-	std::ofstream o;
-#ifdef _WIN32
-	std::wstring wfilename = cgv::utils::str2wstr("posi_btn.txt");
-	o.open(wfilename, std::ios::out);
-#else
-	o.open(filename, std::ios::out);
-#endif	
-	if (o) {
-		for (auto b : boxguibtns) {
-			o << b.trans << std::endl;;
-		}
-	}
-	o.close();
-}
-/// construct boxgui given a list of btn names 
-void vr_rgbd::construct_movable_boxgui(std::vector<std::string> llist) {
-	// todo- read posi. from file 
-	std::default_random_engine generator;
-	std::uniform_real_distribution<float> distribution(0, 1);
-	bool read_from_file = false;
-
-	std::ifstream fin;
-#ifdef _WIN32
-	std::wstring wfilename = cgv::utils::str2wstr("posi_btn.txt");
-	fin.open(wfilename);
-#else
-	fin.open(filename);
-#endif
-
-	if (fin.is_open()) {
-		const int CHARS_PER_LINE = 512;
-		while (!fin.eof())
-		{
-			char buf[CHARS_PER_LINE];
-			fin.getline(buf, CHARS_PER_LINE);
-			std::string str(buf);
-			std::stringstream ss(str);
-			float tmp_x, tmp_y, tmp_z;
-			ss >> tmp_x >> tmp_y >> tmp_z;
-			btnposilist.push_back(vec3(tmp_x, tmp_y, tmp_z));
-		}
-		fin.close();
-		read_from_file = true;
-	}
-
-	for (int i = 0; i < llist.size(); i++) {
-		rgb tmpcol = rgb(
-			0.4f * distribution(generator) + 0.1f,
-			0.4f * distribution(generator) + 0.3f,
-			0.4f * distribution(generator) + 0.1f
-		);
-		int num_per_line = 13;
-		float startposiz = 0;
-		float height = 2;
-		float len = num_per_line * 0.3;
-		vec3 tmpposi;
-		if (read_from_file) {
-			tmpposi = btnposilist.at(i);
-		}
-		else {
-			tmpposi = vec3(2.5, height - (i / num_per_line) * 0.3, startposiz + i * 0.3 - (i / num_per_line) * len);
-			btnposilist.push_back(tmpposi);
-		}
-		boxgui_button tmpbtn = boxgui_button(
-			vec3(0.1, 0.2, 0.2), 
-			tmpposi, 
-			quat(vec3(0, 1, 0), 0), 
-			tmpcol,
-			-1
-		);
-		tmpbtn.set_label(llist.at(i), 50);// 8 char per line 
-		boxguibtns.push_back(tmpbtn);
-	}
-	// write to file 
-	if (!read_from_file) {
-		write_btnposi_to_file();
-	}
 }
 /// construct a scene with a table
 void vr_rgbd::build_scene(float w, float d, float h, float W, float tw, float td, float th, float tW)
@@ -2211,6 +1307,903 @@ void vr_rgbd::construct_movable_boxes(float tw, float td, float th, float tW, si
 		rot.normalize();
 		movable_box_rotations.push_back(rot);
 	}
+}
+/// write posi. list to file 
+void vr_rgbd::write_btnposi_to_file() {
+	std::ofstream o;
+#ifdef _WIN32
+	std::wstring wfilename = cgv::utils::str2wstr("posi_btn.txt");
+	o.open(wfilename, std::ios::out);
+#else
+	o.open(filename, std::ios::out);
+#endif	
+	if (o) {
+		for (auto b : boxguibtns) {
+			o << b.trans << std::endl;;
+		}
+	}
+	o.close();
+}
+/// construct boxgui given a list of btn names 
+void vr_rgbd::construct_movable_boxgui(std::vector<std::string> llist) {
+	// todo- read posi. from file 
+	std::default_random_engine generator;
+	std::uniform_real_distribution<float> distribution(0, 1);
+	bool read_from_file = false;
+
+	std::ifstream fin;
+#ifdef _WIN32
+	std::wstring wfilename = cgv::utils::str2wstr("posi_btn.txt");
+	fin.open(wfilename);
+#else
+	fin.open(filename);
+#endif
+
+	if (fin.is_open()) {
+		const int CHARS_PER_LINE = 512;
+		while (!fin.eof())
+		{
+			char buf[CHARS_PER_LINE];
+			fin.getline(buf, CHARS_PER_LINE);
+			std::string str(buf);
+			std::stringstream ss(str);
+			float tmp_x, tmp_y, tmp_z;
+			ss >> tmp_x >> tmp_y >> tmp_z;
+			btnposilist.push_back(vec3(tmp_x, tmp_y, tmp_z));
+		}
+		fin.close();
+		read_from_file = true;
+	}
+
+	for (int i = 0; i < llist.size(); i++) {
+		rgb tmpcol = rgb(
+			0.4f * distribution(generator) + 0.1f,
+			0.4f * distribution(generator) + 0.3f,
+			0.4f * distribution(generator) + 0.1f
+		);
+		int num_per_line = 13;
+		float startposiz = 0;
+		float height = 2;
+		float len = num_per_line * 0.3;
+		vec3 tmpposi;
+		if (read_from_file) {
+			tmpposi = btnposilist.at(i);
+		}
+		else {
+			tmpposi = vec3(2.5, height - (i / num_per_line) * 0.3, startposiz + i * 0.3 - (i / num_per_line) * len);
+			btnposilist.push_back(tmpposi);
+		}
+		boxgui_button tmpbtn = boxgui_button(
+			vec3(0.1, 0.2, 0.2),
+			tmpposi,
+			quat(vec3(0, 1, 0), 0),
+			tmpcol,
+			-1
+		);
+		tmpbtn.set_label(llist.at(i), 50);// 8 char per line 
+		boxguibtns.push_back(tmpbtn);
+	}
+	// write to file 
+	if (!read_from_file) {
+		write_btnposi_to_file();
+	}
+}
+
+///
+bool vr_rgbd::init(cgv::render::context& ctx)
+{
+	cgv::render::ref_point_renderer(ctx, 1);
+
+	if (!cgv::utils::has_option("NO_OPENVR"))
+		ctx.set_gamma(1.0f);
+	cgv::gui::connect_vr_server(true);
+
+	auto view_ptr = find_view_as_node();
+	if (view_ptr) {
+		view_ptr->set_eye_keep_view_angle(dvec3(0, 4, -4));
+		// if the view points to a vr_view_interactor
+		vr_view_ptr = dynamic_cast<vr_view_interactor*>(view_ptr);
+		if (vr_view_ptr) {
+			// configure vr event processing
+			vr_view_ptr->set_event_type_flags(
+				cgv::gui::VREventTypeFlags(
+					cgv::gui::VRE_KEY +
+					cgv::gui::VRE_ONE_AXIS +
+					cgv::gui::VRE_ONE_AXIS_GENERATES_KEY +
+					cgv::gui::VRE_TWO_AXES +
+					cgv::gui::VRE_TWO_AXES_GENERATES_DPAD +
+					cgv::gui::VRE_POSE
+				));
+			vr_view_ptr->enable_vr_event_debugging(false);
+			// configure vr rendering
+			vr_view_ptr->draw_action_zone(false);
+			vr_view_ptr->draw_vr_kits(true);
+			vr_view_ptr->enable_blit_vr_views(true);
+			vr_view_ptr->set_blit_vr_view_width(200);
+
+		}
+	}
+	cgv::render::ref_box_renderer(ctx, 1);
+	cgv::render::ref_sphere_renderer(ctx, 1);
+
+	skyprog.build_program(ctx, "skycube.glpr");
+	img_tex.create_from_images(ctx, data_dir + "/skybox/cm_{xp,xn,yp,yn,zp,zn}.jpg");
+	pointcloud_reading_path = data_dir + "/12.11.2020_tianfangs_office/";
+
+	bool succ = cube_prog.build_program(ctx, "color_cube.glpr", true);
+
+	cgv::render::gl::ensure_glew_initialized();
+	mmesh = std::make_shared<SkinningMesh>();
+	mmesh->init_shaders(ctx);
+
+	construct_handheld_gui();
+
+	if (pc_drawable)
+		pc_drawable->init(ctx);
+
+	return true;
+}
+///
+void vr_rgbd::init_frame(cgv::render::context& ctx)
+{
+	if (construct_boxgui)
+		for (auto& btn : boxguibtns) {
+			if (btn.use_label) {
+				if (btn.labeltex->label_fbo.get_width() != btn.labeltex->label_resolution) {
+					btn.labeltex->label_tex.destruct(ctx);
+					btn.labeltex->label_fbo.destruct(ctx);
+				}
+				if (!btn.labeltex->label_fbo.is_created()) {
+					btn.labeltex->label_tex.create(ctx, cgv::render::TT_2D, btn.labeltex->label_resolution, btn.labeltex->label_resolution);
+					btn.labeltex->label_fbo.create(ctx, btn.labeltex->label_resolution, btn.labeltex->label_resolution);
+					btn.labeltex->label_tex.set_min_filter(cgv::render::TF_LINEAR_MIPMAP_LINEAR);
+					btn.labeltex->label_tex.set_mag_filter(cgv::render::TF_LINEAR);
+					btn.labeltex->label_fbo.attach(ctx, btn.labeltex->label_tex);
+					btn.labeltex->label_outofdate = true;
+				}
+				if (btn.labeltex->label_outofdate && btn.labeltex->label_fbo.is_complete(ctx)) {
+					glPushAttrib(GL_COLOR_BUFFER_BIT);
+					btn.labeltex->label_fbo.enable(ctx);
+					btn.labeltex->label_fbo.push_viewport(ctx);
+					ctx.push_pixel_coords();
+					glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+					glClear(GL_COLOR_BUFFER_BIT);
+
+					glColor4f(btn.labeltex->label_color[0], btn.labeltex->label_color[1], btn.labeltex->label_color[2], 1);
+					ctx.set_cursor(20, (int)ceil(btn.labeltex->label_size) + 20);
+					ctx.enable_font_face(label_font_face, btn.labeltex->label_size);
+					ctx.output_stream() << btn.labeltex->label_text << "\n";
+					ctx.output_stream().flush(); // make sure to flush the stream before change of font size or font face
+
+					ctx.enable_font_face(label_font_face, 0.7f * btn.labeltex->label_size);
+					for (size_t i = 0; i < intersection_points.size(); ++i) {
+						ctx.output_stream()
+							<< "box " << intersection_box_indices[i]
+							<< " at (" << intersection_points[i]
+							<< ") with controller " << intersection_controller_indices[i] << "\n";
+					}
+					ctx.output_stream().flush();
+
+					ctx.pop_pixel_coords();
+					btn.labeltex->label_fbo.pop_viewport(ctx);
+					btn.labeltex->label_fbo.disable(ctx);
+					glPopAttrib();
+					btn.labeltex->label_outofdate = false;
+
+					btn.labeltex->label_tex.generate_mipmaps(ctx);
+				}
+			}
+		}
+
+	if (pc_drawable)
+		pc_drawable->init_frame(ctx);
+}
+///
+void vr_rgbd::clear(cgv::render::context& ctx)
+{
+	cgv::render::ref_point_renderer(ctx, -1);
+	cgv::render::ref_box_renderer(ctx, -1);
+	cgv::render::ref_sphere_renderer(ctx, -1);
+}
+///
+void vr_rgbd::draw_pc(cgv::render::context& ctx, const std::vector<vertex>& pc)
+{
+	if (pc.empty())
+		return;
+	auto& pr = cgv::render::ref_point_renderer(ctx);
+	pr.set_position_array(ctx, &pc.front().point, pc.size(), sizeof(vertex));
+	pr.set_color_array(ctx, &pc.front().color, pc.size(), sizeof(vertex));
+	if (pr.validate_and_enable(ctx)) {
+		glDrawArrays(GL_POINTS, 0, (GLsizei)pc.size());
+		pr.disable(ctx);
+	}
+}
+///
+void vr_rgbd::draw(cgv::render::context& ctx)
+{
+	// render the skybox as bkg
+	// large enough to contain the whole scene
+	float max_scene_extent = 100;
+	glDepthMask(GL_FALSE);
+	glDisable(GL_CULL_FACE);
+	img_tex.enable(ctx, 1);
+	skyprog.enable(ctx);
+	skyprog.set_uniform(ctx, "img_tex", 1);
+	ctx.push_modelview_matrix();
+	ctx.mul_modelview_matrix(cgv::math::scale4<double>(
+		max_scene_extent, max_scene_extent, max_scene_extent));
+	ctx.tesselate_unit_cube();
+	ctx.pop_modelview_matrix();
+	skyprog.disable(ctx);
+	img_tex.disable(ctx);
+	glEnable(GL_CULL_FACE);
+	glDepthMask(GL_TRUE);
+
+	// render the mesh 
+	if (mmesh)
+		mmesh->draw(ctx);
+
+	// render the handheld object: the historical ones 
+	for (int i = 0; i < scanning_primitive_list.size(); i++) {
+		cube_prog.enable(ctx);
+		cube_prog.set_uniform(ctx, "mvp", scanning_primitive_list.at(i)->get_mvp());
+		switch (scanning_primitive_list.at(i)->get_predef_obj_id()) {
+		case 0:
+			if (constructive_shaping_mode && scanning_primitive_list.at(i)->get_recorded_posi_list().size() > 0) {
+				if ((num_rec_posi % 2 == 1) && (i == (scanning_primitive_list.size() - 1))) {
+					// render the first posi and the current one, dynamic 
+					ctx.tesselate_box(box3(
+						vec3(scanning_primitive_list.at(i)->get_recorded_posi_list().at(0)),
+						vec3(objpicklist_translations.at(0))), false, false);
+				}
+				else {
+					// render a fixed object 
+					ctx.tesselate_box(box3(
+						vec3(scanning_primitive_list.at(i)->get_recorded_posi_list().at(0)),
+						vec3(scanning_primitive_list.at(i)->get_recorded_posi_list().at(1))), false, false);
+				}
+			}
+			else
+				ctx.tesselate_unit_cube(false, false);
+			break;
+		case 1:
+			if (constructive_shaping_mode) {
+
+			}
+			else
+				ctx.tesselate_unit_sphere(25, false, false);
+			break;
+		case 2:
+			if (constructive_shaping_mode) {
+
+			}
+			else
+				ctx.tesselate_unit_prism(false, false);
+			break;
+		}
+		cube_prog.disable(ctx);
+	}
+
+	// tesselate + set_uniform style, current muster one
+		/*if (objpicklist_rotations.size() > 0) {
+			cube_prog.enable(ctx);
+			mat4 mvp, R;
+			objpicklist_rotations.at(0).put_homogeneous_matrix(R);
+			mvp = cgv::math::scale4<double>(0.01 * obj_scale_factor, 0.01 * obj_scale_factor, 0.01 * obj_scale_factor);
+			mvp = R * mvp;
+			mvp = cgv::math::translate4<double>(objpicklist_translations.at(0)) * mvp;
+			cube_prog.set_uniform(ctx, "mvp", mvp);
+			switch (predef_obj_id) {
+				case 0:
+					ctx.tesselate_unit_cube(false, false);
+					break;
+				case 1:
+					ctx.tesselate_unit_sphere(25, false, false);
+					break;
+				case 2:
+					ctx.tesselate_unit_prism(false, false);
+					break;
+			}
+			cube_prog.disable(ctx);
+		}*/
+
+		// render the pc
+	if (pc_drawable)
+		pc_drawable->draw(ctx);
+
+	if (show_points) {
+		auto& pr = cgv::render::ref_point_renderer(ctx);
+		pr.set_render_style(point_style);
+		pr.set_y_view_angle((float)vr_view_ptr->get_y_view_angle());
+		draw_pc(ctx, current_pc);
+
+		//
+		for (size_t i = 0; i < loaded_pcs.size(); ++i)
+			draw_pc(ctx, loaded_pcs[i]);
+
+		//
+		size_t begin = 0;
+		size_t end = recorded_pcs.size();
+		if (end > max_nr_shown_recorded_pcs)
+			begin = end - max_nr_shown_recorded_pcs;
+
+		for (size_t i = begin; i < end; ++i)
+			draw_pc(ctx, recorded_pcs[i]);
+	}
+
+	if (vr_view_ptr) {
+		std::vector<vec3> P;
+		std::vector<rgb> C;
+		const vr::vr_kit_state* state_ptr = vr_view_ptr->get_current_vr_state();
+		if (state_ptr) {
+			for (int ci = 0; ci < 4; ++ci) if (state_ptr->controller[ci].status == vr::VRS_TRACKED) {
+				vec3 ray_origin, ray_direction;
+				state_ptr->controller[ci].put_ray(&ray_origin(0), &ray_direction(0));
+				P.push_back(ray_origin);
+				P.push_back(ray_origin + ray_length * ray_direction);
+				rgb c(float(1 - ci), 0.5f * (int)state[ci], float(ci));
+				C.push_back(c);
+				C.push_back(c);
+			}
+		}
+		if (P.size() > 0) {
+			cgv::render::shader_program& prog = ctx.ref_default_shader_program();
+			int pi = prog.get_position_index();
+			int ci = prog.get_color_index();
+			cgv::render::attribute_array_binding::set_global_attribute_array(ctx, pi, P);
+			cgv::render::attribute_array_binding::enable_global_array(ctx, pi);
+			cgv::render::attribute_array_binding::set_global_attribute_array(ctx, ci, C);
+			cgv::render::attribute_array_binding::enable_global_array(ctx, ci);
+			glLineWidth(3);
+			prog.enable(ctx);
+			glDrawArrays(GL_LINES, 0, (GLsizei)P.size());
+			prog.disable(ctx);
+			cgv::render::attribute_array_binding::disable_global_array(ctx, pi);
+			cgv::render::attribute_array_binding::disable_global_array(ctx, ci);
+			glLineWidth(1);
+		}
+	}
+
+	// draw static boxes
+	if (boxes.size()) {
+		cgv::render::box_renderer& renderer = cgv::render::ref_box_renderer(ctx);
+		renderer.set_render_style(style);
+		renderer.set_box_array(ctx, boxes);
+		renderer.set_color_array(ctx, box_colors);
+		if (renderer.validate_and_enable(ctx)) {
+			glDrawArrays(GL_POINTS, 0, (GLsizei)boxes.size());
+		}
+		renderer.disable(ctx);
+	}
+
+	// push btns in boxgui to dynamic box list, treat 
+	// boxguibtns the same as moveble boxes
+	// render tex. in an other block
+	if (construct_boxgui)
+		if (boxguibtns.size()) {
+			cgv::render::box_renderer& renderer = cgv::render::ref_box_renderer(ctx);
+			std::vector<box3> movable_btn;
+			std::vector<rgb> movable_btn_colors;
+			std::vector<vec3> movable_btn_translations;
+			std::vector<quat> movable_btn_rotations;
+			for (auto btn : boxguibtns) {
+				if (btn.group == which_boxgui_group_is_going_to_be_rendered) {
+					movable_btn.push_back(box3(-0.5f * btn.ext, 0.5f * btn.ext));
+					movable_btn_colors.push_back(btn.color);
+					cur_left_hand_dir.normalize();
+
+					if (btn.has_intersec && !btn.is_static)
+						movable_btn_translations.push_back(btn.trans + cur_left_hand_dir * 0.1);
+					else
+						movable_btn_translations.push_back(btn.trans);
+					movable_btn_rotations.push_back(btn.rot);
+				}
+			}
+			renderer.set_render_style(movable_style);
+			renderer.set_box_array(ctx, movable_btn);
+			renderer.set_color_array(ctx, movable_btn_colors);
+			renderer.set_translation_array(ctx, movable_btn_translations);
+			renderer.set_rotation_array(ctx, movable_btn_rotations);
+			if (renderer.validate_and_enable(ctx)) {
+				glDrawArrays(GL_POINTS, 0, (GLsizei)movable_btn.size());
+			}
+			renderer.disable(ctx);
+		}
+
+	// draw dynamic boxes 
+	if (!movable_boxes.empty()) {
+		cgv::render::box_renderer& renderer = cgv::render::ref_box_renderer(ctx);
+		renderer.set_render_style(movable_style);
+		renderer.set_box_array(ctx, movable_boxes);
+		renderer.set_color_array(ctx, movable_box_colors);
+		renderer.set_translation_array(ctx, movable_box_translations);
+		renderer.set_rotation_array(ctx, movable_box_rotations);
+		if (renderer.validate_and_enable(ctx)) {
+			glDrawArrays(GL_POINTS, 0, (GLsizei)movable_boxes.size());
+		}
+		renderer.disable(ctx);
+	}
+
+	// yzy, render labels of boxgui 
+	for (auto btn : boxguibtns) {
+		if (btn.group == which_boxgui_group_is_going_to_be_rendered)
+			if (btn.use_label) {
+				// points for a label, y-z plane
+				vec3 p1(0.5 * btn.ext.x(), 0.5 * btn.ext.y(), 0);
+				vec3 p2(-0.5 * btn.ext.x(), 0.5 * btn.ext.y(), 0);
+				vec3 p3(0.5 * btn.ext.x(), -0.5 * btn.ext.y(), 0);
+				vec3 p4(-0.5 * btn.ext.x(), -0.5 * btn.ext.y(), 0);
+
+				vec3 addi_offset = vec3(0);
+
+				if (btn.has_intersec && !btn.is_static)
+					addi_offset = vec3(0, 0, -0.1f); // todo
+
+				p1 = p1 + vec3(0, 0, 0.5 * btn.ext.z() + 0.01) + addi_offset;
+				p2 = p2 + vec3(0, 0, 0.5 * btn.ext.z() + 0.01) + addi_offset;
+				p3 = p3 + vec3(0, 0, 0.5 * btn.ext.z() + 0.01) + addi_offset;
+				p4 = p4 + vec3(0, 0, 0.5 * btn.ext.z() + 0.01) + addi_offset;
+
+				/*quat tmp(vec3(0, 1, 0), var1);
+				tmp.rotate(p1);
+				tmp.rotate(p2);
+				tmp.rotate(p3);
+				tmp.rotate(p4);*/
+
+				// rotate and translate according to the gui boxes
+				btn.rot.rotate(p1);
+				btn.rot.rotate(p2);
+				btn.rot.rotate(p3);
+				btn.rot.rotate(p4);
+
+				p1 = p1 + btn.trans;
+				p2 = p2 + btn.trans;
+				p3 = p3 + btn.trans;
+				p4 = p4 + btn.trans;
+
+				cgv::render::shader_program& prog = ctx.ref_default_shader_program(true);
+				int pi = prog.get_position_index();
+				int ti = prog.get_texcoord_index();
+				std::vector<vec3> P;
+				std::vector<vec2> T;
+
+				P.push_back(p1); T.push_back(vec2(1.0f, 1.0f));
+				P.push_back(p2); T.push_back(vec2(0.0f, 1.0f));
+				P.push_back(p3); T.push_back(vec2(1.0f, 0.0f));
+				P.push_back(p4); T.push_back(vec2(0.0f, 0.0f));
+
+				cgv::render::attribute_array_binding::set_global_attribute_array(ctx, pi, P);
+				cgv::render::attribute_array_binding::enable_global_array(ctx, pi);
+				cgv::render::attribute_array_binding::set_global_attribute_array(ctx, ti, T);
+				cgv::render::attribute_array_binding::enable_global_array(ctx, ti);
+				prog.enable(ctx);
+				btn.labeltex->label_tex.enable(ctx);
+				ctx.set_color(rgb(1, 1, 1));
+				glDrawArrays(GL_TRIANGLE_STRIP, 0, (GLsizei)P.size());
+				btn.labeltex->label_tex.disable(ctx);
+				prog.disable(ctx);
+				cgv::render::attribute_array_binding::disable_global_array(ctx, pi);
+				cgv::render::attribute_array_binding::disable_global_array(ctx, ti);
+			}
+	}
+
+	// draw intersection points
+	if (!intersection_points.empty()) {
+		auto& sr = cgv::render::ref_sphere_renderer(ctx);
+		sr.set_position_array(ctx, intersection_points);
+		sr.set_color_array(ctx, intersection_colors);
+		sr.set_render_style(srs);
+		if (sr.validate_and_enable(ctx)) {
+			glDrawArrays(GL_POINTS, 0, (GLsizei)intersection_points.size());
+			sr.disable(ctx);
+		}
+	}
+}
+///
+bool vr_rgbd::handle(cgv::gui::event& e)
+{
+	// check if vr event flag is not set and don't process events in this case
+	if ((e.get_flags() & cgv::gui::EF_VR) == 0)
+		return false;
+	// check event id
+	switch (e.get_kind()) {
+	case cgv::gui::EID_KEY:
+	{
+		cgv::gui::vr_key_event& vrke = static_cast<cgv::gui::vr_key_event&>(e);
+		int ci = vrke.get_controller_index();
+		if (ci == 0 && vrke.get_key() == vr::VR_DPAD_DOWN) {
+			switch (vrke.get_action()) {
+			case cgv::gui::KA_PRESS:
+				rgbd_2_controller_orientation_start_calib = controller_orientation; // V^0 = V
+				rgbd_2_controller_position_start_calib = controller_position;       // r^0 = r
+				in_calibration = true;
+				update_member(&in_calibration);
+				break;
+			case cgv::gui::KA_RELEASE:
+				rgbd_2_controller_orientation = transpose(rgbd_2_controller_orientation_start_calib) * controller_orientation * rgbd_2_controller_orientation;
+				rgbd_2_controller_position = transpose(rgbd_2_controller_orientation_start_calib) * ((controller_orientation * rgbd_2_controller_position + controller_position) - rgbd_2_controller_position_start_calib);
+				in_calibration = false;
+				update_member(&in_calibration);
+				break;
+			}
+		}
+		if (ci == 0 && vrke.get_key() == vr::VR_DPAD_LEFT)
+		{
+			switch (vrke.get_action()) {
+			case cgv::gui::KA_PRESS:
+				zoom_in = true;
+				update_member(&zoom_in);
+				break;
+			case cgv::gui::KA_RELEASE:
+				zoom_in = false;
+				update_member(&zoom_in);
+				break;
+			}
+		}
+		if (ci == 0 && vrke.get_key() == vr::VR_DPAD_RIGHT)
+		{
+			switch (vrke.get_action()) {
+			case cgv::gui::KA_PRESS:
+				zoom_out = true;
+				update_member(&zoom_out);
+				break;
+			case cgv::gui::KA_RELEASE:
+				zoom_out = false;
+				update_member(&zoom_out);
+				break;
+			}
+		}
+		if (ci == 1 && vrke.get_key() == vr::VR_DPAD_LEFT)
+		{
+			if (vrke.get_action() == cgv::gui::KA_PRESS)
+				vr_view_ptr->set_tracking_rotation(vr_view_ptr->get_tracking_rotation() + 10);
+		}
+		if (ci == 1 && vrke.get_key() == vr::VR_DPAD_RIGHT)
+		{
+			if (vrke.get_action() == cgv::gui::KA_PRESS)
+				vr_view_ptr->set_tracking_rotation(vr_view_ptr->get_tracking_rotation() - 10);
+		}
+		if (ci == 0 && vrke.get_key() == vr::VR_MENU)
+		{
+			switch (vrke.get_action()) {
+			case cgv::gui::KA_PRESS:
+				clear_all_frames = true;
+				update_member(&clear_all_frames);
+				break;
+			case cgv::gui::KA_RELEASE:
+				clear_all_frames = false;
+				update_member(&clear_all_frames);
+				break;
+			}
+		}
+		if (ci == 1 && vrke.get_key() == vr::VR_GRIP)
+		{
+			if (vrke.get_action() == cgv::gui::KA_PRESS) {
+				vec3 origin, direction;
+				vrke.get_state().controller[1].put_ray(&origin(0), &direction(0));
+				vec3 posi = compute_ray_plane_intersection_point(origin, direction);
+				vr_view_ptr->set_tracking_origin(vec3(posi.x(),
+					vr_view_ptr->get_tracking_origin().y(), posi.z()));
+			}
+		}
+		if (ci == 0 && vrke.get_key() == vr::VR_GRIP)
+		{
+			if (vrke.get_action() == cgv::gui::KA_PRESS) {
+				if (which_boxgui_group_is_going_to_be_rendered >= 0)
+					which_boxgui_group_is_going_to_be_rendered = -1; //erase all gui stuffs 
+				else
+					which_boxgui_group_is_going_to_be_rendered = 0;
+			}
+		}
+		return true;
+	}
+	case cgv::gui::EID_THROTTLE:
+	{
+		cgv::gui::vr_throttle_event& vrte = static_cast<cgv::gui::vr_throttle_event&>(e);
+		if ((vrte.get_last_value() <= 0.5f) && (vrte.get_value() > 0.5f)) {
+			trigger_is_pressed = (vrte.get_value() > 0.5f);
+			update_member(&trigger_is_pressed);
+			std::cout << "trigger pressed! " << std::endl;
+
+			//if (constructive_shaping_mode) {
+			//	if (predef_obj_id == 0) { // a box, two points are used
+			//		int max_rec_posi = 2; // we store maximal two positions to indicate a box 
+			//		vec3 cur_posi = objpicklist_translations.at(0);
+			//		if (num_rec_posi%2 == 0) { // if is the first position 
+			//			// compute current mvp 
+			//			mat4 mvp, R;
+			//			/*objpicklist_rotations.at(0).put_homogeneous_matrix(R);
+			//			mvp = cgv::math::scale4<double>(0.01 * obj_scale_factor, 0.01 * obj_scale_factor, 0.01 * obj_scale_factor);
+			//			mvp = R * mvp;
+			//			mvp = cgv::math::translate4<double>(objpicklist_translations.at(0)) * mvp;*/
+
+			//			mvp.identity();
+
+			//			cur_obj = new scanning_primitive(predef_obj_id, mvp, true);
+			//			cur_obj->record_position(cur_posi);
+			//			num_rec_posi++;
+			//			scanning_primitive_list.push_back(cur_obj);
+			//		}
+			//		else if (num_rec_posi%2 == 1) {
+			//			cur_obj->record_position(cur_posi);
+			//			num_rec_posi++;
+			//		}
+			//	}
+			//}
+			//else {
+			//	// things will be recorded directly, exact_shaping_mode
+			//	// compute current mvp 
+			//	mat4 mvp, R;
+			//	objpicklist_rotations.at(0).put_homogeneous_matrix(R);
+			//	mvp = cgv::math::scale4<double>(0.01 * obj_scale_factor, 0.01 * obj_scale_factor, 0.01 * obj_scale_factor);
+			//	mvp = R * mvp;
+			//	mvp = cgv::math::translate4<double>(objpicklist_translations.at(0)) * mvp;
+
+			//	cur_obj = new scanning_primitive(predef_obj_id, mvp, false);
+			//	scanning_primitive_list.push_back(cur_obj);
+			//}
+		}
+		break;
+	}
+	case cgv::gui::EID_STICK:
+	{
+		cgv::gui::vr_stick_event& vrse = static_cast<cgv::gui::vr_stick_event&>(e);
+		switch (vrse.get_action()) {
+		case cgv::gui::SA_TOUCH:
+			if (state[vrse.get_controller_index()] == IS_OVER)
+				state[vrse.get_controller_index()] = IS_GRAB;
+			std::cout << "IS_touch" << std::endl;
+			if (vrse.get_controller_index() == 1)
+				btn_keydown_boxgui = true;
+			break;
+		case cgv::gui::SA_RELEASE:
+			if (state[vrse.get_controller_index()] == IS_GRAB)
+				state[vrse.get_controller_index()] = IS_OVER;
+			break;
+		case cgv::gui::SA_PRESS:
+			if ((vrse.get_controller_index() == 1) && (predef_obj_id < predef_obj_maxid) && (vrse.get_x() > 0.5)) {
+				predef_obj_id++;
+			}
+			else if ((vrse.get_controller_index() == 1) && (predef_obj_id > 0) && (vrse.get_x() < -0.5)) {
+				predef_obj_id--;
+			}
+			break;
+		}
+		return true;
+	}
+	case cgv::gui::EID_POSE:
+		cgv::gui::vr_pose_event& vrpe = static_cast<cgv::gui::vr_pose_event&>(e);
+		// check for controller pose events
+		int ci = vrpe.get_trackable_index();
+		if (ci == rgbd_controller_index) { // always update the controller state! as global vari.
+			controller_orientation = vrpe.get_orientation();
+			controller_position = vrpe.get_position();
+		}
+		// left hand event 
+		if (ci == 0) {
+			// update positions 
+			cur_left_hand_posi = vrpe.get_position();
+			cur_left_hand_rot = vrpe.get_orientation();
+			cur_left_hand_rot_mat = vrpe.get_rotation_matrix();
+		}
+		if (ci != -1) {
+			if (btn_keydown_boxgui) {
+				if (intersection_boxgui_indices.size() > 0) {
+					// call back functions 
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("save_\nscene")) {
+						std::cout << "saved!" << std::endl;
+						write_btnposi_to_file();
+					}
+
+					// main panel  
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("back")) {
+						which_boxgui_group_is_going_to_be_rendered = 0;
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("pc_tools")) {
+						which_boxgui_group_is_going_to_be_rendered = 1;
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("mesh_\ntools")) {
+						which_boxgui_group_is_going_to_be_rendered = 2;
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("semantic\ntools")) {
+						which_boxgui_group_is_going_to_be_rendered = 3;
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("interaction\n_tools")) {
+						which_boxgui_group_is_going_to_be_rendered = 4;
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("gui_tools")) {
+						which_boxgui_group_is_going_to_be_rendered = 5;
+					}
+
+					// sub-panel 1
+					/*
+						label_list.push_back("read_properties");
+						label_list.push_back("load_next_pc");
+						label_list.push_back("del_last_pc");
+						label_list.push_back("align_pc_\nwith_last\n_frame");
+					*/
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("read_properties")) {
+						read_properties();
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("load_next_pc")) {
+						read_next_pc();
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("load_all_pcs")) {
+						read_pc_queue();
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("del_last_pc")) {
+						del_last_pc();
+					}
+					if (boxguibtns.at(intersection_boxgui_indices.front())
+						.get_label_text()._Equal("align_pc_\nwith_last\n_frame")) {
+
+					}
+
+
+				}
+				btn_keydown_boxgui = false;
+			}
+			if (state[0] == IS_GRAB) {
+				std::cout << "IS_GRAB" << std::endl;
+
+				// clean again
+				intersection_points.clear();
+				intersection_box_indices.clear();
+				intersection_boxgui_indices.clear();
+				for (auto& b : boxguibtns) { // pf- must have &! to modify 
+					b.has_intersec = false;
+				}
+				// in grab mode apply relative transformation to grabbed boxes
+				// compute intersections for left hand: drag and move boxes 
+				vec3 origin, direction;
+				vrpe.get_state().controller[0].put_ray(&origin(0), &direction(0));
+				compute_intersections(origin, direction, true, true);
+				// get previous and current controller position
+				vec3 last_pos = vrpe.get_last_position();
+				vec3 pos = vrpe.get_position();
+				// get rotation from previous to current orientation
+				// this is the current orientation matrix times the
+				// inverse (or transpose) of last orientation matrix:
+				// vrpe.get_orientation()*transpose(vrpe.get_last_orientation())
+				mat3 rotation = vrpe.get_rotation_matrix();
+				// iterate intersection points of current controller
+				for (size_t i = 0; i < intersection_points.size(); ++i) {
+					// extract box index
+					unsigned bi = intersection_box_indices[i];
+					// update translation with position change and rotation
+					movable_box_translations[bi] =
+						rotation * (movable_box_translations[bi] - last_pos) + pos;
+					// update orientation with rotation, note that quaternions
+					// need to be multiplied in oposite order. In case of matrices
+					// one would write box_orientation_matrix *= rotation
+					movable_box_rotations[bi] = quat(rotation) * movable_box_rotations[bi];
+					// update intersection points
+					intersection_points[i] = rotation * (intersection_points[i] - last_pos) + pos;
+				}
+
+				if (intersection_boxgui_indices.size() > 0) {
+					//intersection_boxgui_controller_indices
+					unsigned bi = intersection_boxgui_indices.front();
+					// update translation with position change and rotation
+					float xval = boxguibtns.at(bi).trans.x();
+					boxguibtns.at(bi).trans =
+						rotation * (boxguibtns.at(bi).trans - last_pos) + pos;
+					boxguibtns.at(bi).trans.x() = xval;
+					// update orientation with rotation, note that quaternions
+					// need to be multiplied in oposite order. In case of matrices
+					// one would write box_orientation_matrix *= rotation
+
+					//boxguibtns.at(bi).rot = quat(rotation) * boxguibtns.at(bi).rot;
+				}
+				//state[0] = IS_OVER;
+			}
+			else {
+				state[0] = IS_OVER; // init. 
+			}
+		}
+		// always run this block when pose changes 
+		{
+			// updated with right hand controller, we do not use button local rot now
+			vec3 local_z_offset = vec3(0, 0, -1);
+			quat rot(cur_left_hand_rot);
+			rot.normalize();
+			mat3 rot_mat;
+			rot.put_matrix(rot_mat);
+			vec3 global_offset = rot_mat * local_z_offset;
+			cur_left_hand_dir = global_offset;
+
+			for (auto& btn : boxguibtns) {
+				vec3 local_offset = btn.local_trans;
+				quat rot(cur_left_hand_rot);
+				rot.normalize();
+				mat3 rot_mat;
+				rot.put_matrix(rot_mat);
+				vec3 global_offset = rot_mat * local_offset;
+				// addi direction vector should be rotated 
+				vec3 modi_posi = cur_left_hand_posi + global_offset;
+
+				btn.trans = modi_posi;
+				btn.rot = rot * btn.local_rot;
+			}
+
+			// for right hand and boxgui intersections 
+			// init. for pose event clean, todo 
+			intersection_points.clear();
+			intersection_box_indices.clear();
+			intersection_boxgui_indices.clear();
+			for (auto& b : boxguibtns) { // pf- must have &! to modify 
+				b.has_intersec = false;
+			}
+
+			vec3 origin, direction;
+			vrpe.get_state().controller[1].put_ray(&origin(0), &direction(0));
+			compute_intersections(origin, direction, false, true);
+			/*vrpe.get_state().controller[0].put_ray(&origin(0), &direction(0));
+			compute_intersections(origin, direction, true, false);*/
+
+			if (intersection_boxgui_indices.size() > 0) {
+				boxguibtns.at(intersection_boxgui_indices.front()).has_intersec = true;
+				//post_redraw();
+			}
+			post_redraw();
+		}
+		return true;
+	}
+
+	return false;
+}
+/// register on device change events
+void vr_rgbd::on_device_change(void* kit_handle, bool attach)
+{
+	post_recreate_gui();
+}
+///
+bool vr_rgbd::self_reflect(cgv::reflect::reflection_handler& rh)
+{
+	return
+		rh.reflect_member("rgbd_controller_index", rgbd_controller_index) &&
+		rh.reflect_member("zoom_in", zoom_in) &&
+		rh.reflect_member("zoom_out", zoom_out) &&
+		rh.reflect_member("save_pc", save_pointcloud) &&
+		rh.reflect_member("register_pc", registration_started) &&
+		rh.reflect_member("recording_fps", recording_fps) &&
+		rh.reflect_member("ray_length", ray_length) &&
+		rh.reflect_member("record_frame", record_frame) &&
+		rh.reflect_member("record_all_frames", record_all_frames) &&
+		rh.reflect_member("clear_all_frames", clear_all_frames) &&
+		rh.reflect_member("rgbd_started", rgbd_started) &&
+		rh.reflect_member("pointcloud_reading_path", pointcloud_reading_path) &&
+		rh.reflect_member("rgbd_protocol_path", rgbd_protocol_path);
+}
+///
+void vr_rgbd::on_set(void* member_ptr)
+{
+	if (member_ptr == &rgbd_started && rgbd_started != rgbd_inp.is_started()) {
+		if (rgbd_started)
+			start_rgbd();
+		else
+			stop_rgbd();
+	}
+	if (member_ptr == &rgbd_protocol_path) {
+		rgbd_inp.stop();
+		rgbd_inp.detach();
+		rgbd_inp.attach_path(rgbd_protocol_path);
+		if (rgbd_started)
+			start_rgbd();
+	}
+	update_member(member_ptr);
+	post_redraw();
 }
 ///
 void vr_rgbd::create_gui()
