@@ -26,8 +26,8 @@
 
 #include <gl_point_cloud_drawable.h>
 
-#include <openmesh/core/io/meshio.hh>
-#include <openmesh/core/mesh/polymesh_arraykernelt.hh>
+//#include <openmesh/core/io/meshio.hh>
+//#include <openmesh/core/mesh/polymesh_arraykernelt.hh>
 
 #include "boxgui.h"
 #include "mesh_render.h"
