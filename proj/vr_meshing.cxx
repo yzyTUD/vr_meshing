@@ -13,7 +13,7 @@ vr_rgbd::vr_rgbd()
 	save_pointcloud = true;
 	registration_started = false;
 	rgbd_2_controller_orientation.identity();
-	/*rgbd_2_controller_orientation.set_col(0, vec3(-1, 0, 0));
+	/*rgbd_2_controller_orientation.set_col(0, vec3(-1, 0, 0)); 
 	rgbd_2_controller_orientation.set_col(1, vec3(0, -0.7071f, 0.7071f));
 	rgbd_2_controller_orientation.set_col(2, vec3(0, 0.7071f, 0.7071f));*/
 	rgbd_2_controller_position.zeros();

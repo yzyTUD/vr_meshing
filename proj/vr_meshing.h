@@ -31,6 +31,7 @@
 
 #include "boxgui.h"
 #include "mesh_render.h"
+#include "custom_mesh_render_info.h"
 
 ///@ingroup VR
 ///@{

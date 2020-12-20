@@ -1,4 +1,4 @@
-#ifdef RGBD_CONTROL_EXPORTS
+#ifdef MESH_KIT_EXPORTS
 #	define CGV_EXPORTS
 #endif
 

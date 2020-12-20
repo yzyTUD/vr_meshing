@@ -1,0 +1,8 @@
+@=
+projectType="library";
+projectName="mesh_kit";
+projectGUID="4A7F528E-EF96-4121-869D-F261D0070CED";
+addProjectDirs=[CGV_DIR."/libs", CGV_DIR."/plugins", CGV_DIR."/3rd"];
+addIncDirs=[CGV_DIR."/libs"];
+addProjectDeps=["cgv_media","cgv_gl"];
+addSharedDefines=["MESH_KIT_EXPORTS"];
